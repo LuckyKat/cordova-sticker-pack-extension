@@ -789,7 +789,7 @@ pbxProject.prototype.addTargetDependency = function(target, dependencyTargets) {
                 containerPortal_comment: this.hash.project['rootObject_comment'],
                 proxyType: 1,
                 remoteGlobalIDString: dependencyTargetUuid,
-                remoteInfo: nativeTargets[dependencyTargetUuid].name
+                remoteInfo: nativeTargets[dependencyTargetUuid].name.replace('.appex', '')
             },
             targetDependency = {
                 isa: pbxTargetDependency,
@@ -1392,8 +1392,8 @@ pbxProject.prototype.addTarget = function(name, type, subfolder) {
             uuid: targetUuid,
             pbxNativeTarget: {
                 isa: 'PBXNativeTarget',
-                name: '"' + targetName + '"',
-                productName: '"' + targetName + '"',
+                name: '"' + targetName.replace('.appex', '') + '"',
+                productName: '"' + targetName.replace('.appex', '') + '"',
                 productReference: productFile.fileRef,
                 productType: '"' + producttypeForTargettype(targetType) + '"',
                 buildConfigurationList: buildConfigurations.uuid,
@@ -1402,10 +1402,6 @@ pbxProject.prototype.addTarget = function(name, type, subfolder) {
                 dependencies: []
             }
     };
-
-    if (targetName.indexOf('.appex')) {
-        console.error('targetName', targetName);
-    }
 
     // Target: Add to PBXNativeTarget section
     this.addToPbxNativeTargetSection(target)
