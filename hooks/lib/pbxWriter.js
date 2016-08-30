@@ -46,7 +46,7 @@ pbxWriter.prototype.write = function (str) {
     // TEMP: quick fix for .appex.appex, cant for the life of me figure out where this happens
     while (fmt.indexOf('.appex.appex') >= 0) {
         fmt = fmt.replace('.appex.appex', '.appex');
-    // }
+    }
 
     if (this.sync) {
         this.buffer += f("%s%s", i(this.indentLevel), fmt);
