@@ -35,8 +35,17 @@ module.exports = function (context) {
                 pbxProject.parseSync();
             }
 
-            pbxProject.addStickerResourceFile("Stickers.xcassets", {}, "Stickers");
+            stickersKey = pbxProject.addStickerResourceFile("Stickers.xcassets", {}, "Stickers");
             pbxProject.addTarget("Stickers.appex", "app_extension_messages_sticker_pack", "Stickers");
+
+            // cordova makes a CustomTemplate pbxgroup, the stickersGroup must be added there
+            var customTemplateKey = this.findPBXGroupKey({
+                name: "CustomTemplate"
+            });
+            if (customTemplateKey) {
+                pbxProject.addToPbxGroup(stickersKey, customTemplateKey);
+            }
+
 
             configGroups = pbxProject.hash.project.objects['XCBuildConfiguration'];
             for (var key in configGroups) {

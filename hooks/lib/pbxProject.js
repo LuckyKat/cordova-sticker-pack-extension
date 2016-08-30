@@ -286,8 +286,7 @@ pbxProject.prototype.addStickerResourceFile = function (path, opt) {
     this.addToPbxFileReferenceSection(file); // PBXFileReference
     this.addToPbxGroup(file, stickersKey);
 
-
-    return file;
+    return stickersKey;
 }
 
 /**
