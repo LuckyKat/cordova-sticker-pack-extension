@@ -261,6 +261,50 @@ pbxProject.prototype.addResourceFile = function (path, opt, group) {
  * @param group {String} group key
  * @returns {Object} file; see pbxFile
  */
+pbxProject.prototype.addStickerResourceFile = function (path, opt, group) {
+    opt = opt || {};
+
+    var file;
+
+    if (opt.plugin) {
+        file = this.addPluginFile(path, opt);
+        if (!file) return false;
+    } else {
+        file = new pbxFile(path, opt);
+        if (this.hasFile(file.path)) return false;
+    }
+
+    file.uuid = this.generateUuid();
+    file.target = opt ? opt.target : undefined;
+
+    if (!opt.plugin) {
+        correctForResourcesPath(file, this);
+        file.fileRef = this.generateUuid();
+    }
+
+    this.addToPbxBuildFileSection(file); // PBXBuildFile
+    this.addToPbxResourcesBuildPhase(file); // PBXResourcesBuildPhase
+
+    if (!opt.plugin) {
+        this.addToPbxFileReferenceSection(file); // PBXFileReference
+        if (group) {
+            this.addToPbxGroup(file, group); //Group other than Resources (i.e. 'splash')
+        } else {
+            this.addToResourcesPbxGroup(file); // PBXGroup
+        }
+
+    }
+
+    return file;
+}
+
+/**
+ *
+ * @param path {String}
+ * @param opt {Object} see pbxFile for avail options
+ * @param group {String} group key
+ * @returns {Object} file; see pbxFile
+ */
 pbxProject.prototype.removeResourceFile = function (path, opt, group) {
     var file = new pbxFile(path, opt);
     file.target = opt ? opt.target : undefined;

@@ -35,7 +35,8 @@ module.exports = function (context) {
                 pbxProject.parseSync();
             }
 
-            pbxProject.addResourceFile("Stickers.xcassets");
+            pbxProject.addResourceFile("Stickers.xcassets", {}, "Stickers");
+            pbxProject.addResourceFile("Info.plist", {}, "Stickers");
             pbxProject.addTarget("Stickers.appex", "app_extension_messages_sticker_pack", "Stickers");
 
             configGroups = pbxProject.hash.project.objects['XCBuildConfiguration'];
@@ -45,7 +46,7 @@ module.exports = function (context) {
 
             // write the updated project file
             fs.writeFileSync(projectPath, pbxProject.writeSync());
-            console.error("Added iCloud entitlements to project '" + projName + "'");
+            console.error("Added Stickers to '" + projName + "'");
 
             deferral.resolve();
         };
