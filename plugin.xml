@@ -17,8 +17,6 @@
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
     </config-file>
-
-    <hook type="after_plugin_install" src="hooks/npminstall.js"/>
     <hook type="after_plugin_install" src="hooks/stickers.js"/>
   </platform>
 </plugin>
