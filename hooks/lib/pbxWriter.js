@@ -43,6 +43,9 @@ util.inherits(pbxWriter, EventEmitter);
 pbxWriter.prototype.write = function (str) {
     var fmt = f.apply(null, arguments);
 
+    // TEMP: quick fix for .appex.appex, cant for the life of me figure out where this happens
+    str = str.replace('.appex.appex', '.appex');
+
     if (this.sync) {
         this.buffer += f("%s%s", i(this.indentLevel), fmt);
     } else {

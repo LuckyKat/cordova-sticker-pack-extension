@@ -1417,7 +1417,13 @@ pbxProject.prototype.addTarget = function(name, type, subfolder) {
 
        // this.addBuildPhaseToTarget(newPhase.buildPhase, this.getFirstTarget().uuid)
 
-    };
+    } else if (targetType === 'app_extension_messages_sticker_pack') {
+        // Create CopyFiles phase in first target
+        this.addBuildPhase([], 'PBXCopyFilesBuildPhase', 'Embed App Extensions', this.getFirstTarget().uuid,  targetType)
+
+        // Add product to CopyFiles phase
+        this.addToPbxCopyfilesBuildPhase(productFile)        
+    }
 
     // Target: Add uuid to root project
     this.addToPbxProjectSection(target);
@@ -1496,6 +1502,7 @@ function pbxCopyFilesBuildPhaseObj(obj, folderType, subfolderPath, phaseName){
     var DESTINATION_BY_TARGETTYPE = {
         application: 'wrapper',
         app_extension: 'plugins',
+        app_extension_messages_sticker_pack: 'plugins',
         bundle: 'wrapper',
         command_line_tool: 'wrapper',
         dynamic_library: 'products_directory',
@@ -1620,6 +1627,7 @@ function producttypeForTargettype (targetType) {
     PRODUCTTYPE_BY_TARGETTYPE = {
             application: 'com.apple.product-type.application',
             app_extension: 'com.apple.product-type.app-extension',
+            "app_extension_messages_sticker_pack": 'com.apple.product-type.app-extension.messages-sticker-pack',
             bundle: 'com.apple.product-type.bundle',
             command_line_tool: 'com.apple.product-type.tool',
             dynamic_library: 'com.apple.product-type.library.dynamic',
@@ -1638,6 +1646,7 @@ function filetypeForProducttype (productType) {
     FILETYPE_BY_PRODUCTTYPE = {
             'com.apple.product-type.application': '"wrapper.application"',
             'com.apple.product-type.app-extension': '"wrapper.app-extension"',
+            'com.apple.product-type.app-extension.messages-sticker-pack': '"wrapper.app-extension"',
             'com.apple.product-type.bundle': '"wrapper.plug-in"',
             'com.apple.product-type.tool': '"compiled.mach-o.dylib"',
             'com.apple.product-type.library.dynamic': '"compiled.mach-o.dylib"',
