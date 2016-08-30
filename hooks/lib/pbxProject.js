@@ -1484,6 +1484,11 @@ pbxProject.prototype.addTarget = function (name, type, subfolder) {
         this.addBuildPhase([], 'PBXCopyFilesBuildPhase', 'Embed App Extensions', this.getFirstTarget().uuid, targetType)
 
         this.addToPbxCopyfilesBuildPhase(productFile, 'Embed App Extensions')
+
+        // need to add another buildphase
+        // filePathsArray, buildPhaseType, comment, target
+        this.addBuildPhase([], 'PBXResourcesBuildPhase', 'Resources', targetUuid);
+
     }
 
     // Target: Add uuid to root project
