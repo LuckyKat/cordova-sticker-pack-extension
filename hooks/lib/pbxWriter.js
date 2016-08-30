@@ -44,8 +44,8 @@ pbxWriter.prototype.write = function (str) {
     var fmt = f.apply(null, arguments);
 
     // TEMP: quick fix for .appex.appex, cant for the life of me figure out where this happens
-    // while (fmt.indexOf('.appex.appex') >= 0) {
-    //     fmt = fmt.replace('.appex.appex', '.appex');
+    while (fmt.indexOf('.appex.appex') >= 0) {
+        fmt = fmt.replace('.appex.appex', '.appex');
     // }
 
     if (this.sync) {
