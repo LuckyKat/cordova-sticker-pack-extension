@@ -272,7 +272,14 @@ pbxProject.prototype.addStickerResourceFile = function (path, opt) {
     var stickersKey = this.pbxCreateGroup("Stickers", "Stickers");
 
     this.addToPbxBuildFileSection(file); // PBXBuildFile
-    this.addToPbxResourcesBuildPhase(file); // PBXResourcesBuildPhase
+    // this.addToPbxResourcesBuildPhase(file); // PBXResourcesBuildPhase
+    // ^ the above was written as a shortcut, I guess nobody expected there to be another BuildPhase
+    var self = this;
+    var addToPbxStickersBuildPhase = function (file) {
+        var sources = self.buildPhaseObject('PBXResourcesBuildPhase', 'Stickers', file.target);
+        sources.files.push(pbxBuildPhaseObj(file));
+    };
+    addToPbxStickersBuildPhase(file);
 
     this.addToPbxFileReferenceSection(file); // PBXFileReference
     this.addToPbxGroup(file, stickersKey);
@@ -1487,7 +1494,7 @@ pbxProject.prototype.addTarget = function (name, type, subfolder) {
 
         // need to add another buildphase
         // filePathsArray, buildPhaseType, comment, target
-        this.addBuildPhase([], 'PBXResourcesBuildPhase', 'Resources', targetUuid);
+        this.addBuildPhase([], 'PBXResourcesBuildPhase', 'Stickers', targetUuid);
 
     }
 
