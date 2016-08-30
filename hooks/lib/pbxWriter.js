@@ -41,12 +41,10 @@ function pbxWriter(contents) {
 util.inherits(pbxWriter, EventEmitter);
 
 pbxWriter.prototype.write = function (str) {
-    // TEMP: quick fix for .appex.appex, cant for the life of me figure out where this happens
-    if (arguments.length) {
-        arguments[0] = arguments[0].replace('.appex.appex', '.appex');
-    }
-
     var fmt = f.apply(null, arguments);
+
+    // TEMP: quick fix for .appex.appex, cant for the life of me figure out where this happens
+    fmt = fmt.replace('.appex.appex', '.appex');
 
     if (this.sync) {
         this.buffer += f("%s%s", i(this.indentLevel), fmt);
