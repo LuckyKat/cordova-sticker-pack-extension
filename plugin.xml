@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+        id="com.luckykat.stickers"
+        version="0.0.1">
+
+  <name>iMessage Stickers</name>
+  <author>Hernan Zhou</author>
+
+  <description>
+    Add stickers
+  </description>
+
+  <engines>
+    <engine name="cordova" version="&gt;=3.0.0"/>
+  </engines>
+
+  <platform name="ios">
+    <config-file target="config.xml" parent="/*">
+    </config-file>
+
+    <hook type="after_plugin_install" src="hooks/npminstall.js"/>
+    <hook type="after_plugin_install" src="hooks/stickers.js"/>
+  </platform>
+</plugin>
