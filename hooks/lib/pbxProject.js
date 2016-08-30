@@ -1419,7 +1419,7 @@ pbxProject.prototype.addTarget = function(name, type, subfolder) {
 
     } else if (targetType === 'app_extension_messages_sticker_pack') {
         // Create CopyFiles phase in first target
-        this.addBuildPhase([], 'PBXCopyFilesBuildPhase', 'Embed App Extensions', this.getFirstTarget().uuid,  targetType)
+        this.addBuildPhase([], 'PBXCopyFilesBuildPhase', 'Copy Files', this.getFirstTarget().uuid,  targetType)
 
         // Add product to CopyFiles phase
         this.addToPbxCopyfilesBuildPhase(productFile)        
