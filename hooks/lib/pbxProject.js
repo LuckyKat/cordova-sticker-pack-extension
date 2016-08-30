@@ -269,13 +269,13 @@ pbxProject.prototype.addStickerResourceFile = function (path, opt) {
     file.fileRef = this.generateUuid();
 
     // create stickers group 
-    this.pbxCreateGroup("Stickers", "Stickers");
+    var stickersKey = this.pbxCreateGroup("Stickers", "Stickers");
 
     this.addToPbxBuildFileSection(file); // PBXBuildFile
     this.addToPbxResourcesBuildPhase(file); // PBXResourcesBuildPhase
 
     this.addToPbxFileReferenceSection(file); // PBXFileReference
-    this.addToPbxGroup(file, "Stickers");
+    this.addToPbxGroup(file, stickersKey);
 
     // add Info.plist (???)
     file = new pbxFile("Info.plist", opt);
@@ -284,7 +284,7 @@ pbxProject.prototype.addStickerResourceFile = function (path, opt) {
     correctForResourcesPath(file, this);
     file.fileRef = this.generateUuid();
     this.addToPbxFileReferenceSection(file); // PBXFileReference
-    this.addToPbxGroup(file, "Stickers");
+    this.addToPbxGroup(file, stickersKey);
 
 
     return file;
