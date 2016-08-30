@@ -386,8 +386,8 @@ pbxProject.prototype.pbxCopyfilesBuildPhaseObj = function(target) {
     return this.buildPhaseObject('PBXCopyFilesBuildPhase', 'Copy Files', target);
 }
 
-pbxProject.prototype.addToPbxCopyfilesBuildPhase = function(file) {
-    var sources = this.buildPhaseObject('PBXCopyFilesBuildPhase', 'Copy Files', file.target);
+pbxProject.prototype.addToPbxCopyfilesBuildPhase = function(file, name) {
+    var sources = this.buildPhaseObject('PBXCopyFilesBuildPhase', name || 'Copy Files', file.target);
     sources.files.push(pbxBuildPhaseObj(file));
 }
 
@@ -1419,20 +1419,9 @@ pbxProject.prototype.addTarget = function(name, type, subfolder) {
 
     } else if (targetType === 'app_extension_messages_sticker_pack') {
         // Create CopyFiles phase in first target
-        try {
-            this.addBuildPhase([], 'PBXCopyFilesBuildPhase', 'Embed App Extensions', this.getFirstTarget().uuid,  targetType)
-        } catch (e) {
-            console.error(e);
-            console.error(1426);
-        }
+        this.addBuildPhase([], 'PBXCopyFilesBuildPhase', 'Embed App Extensions', this.getFirstTarget().uuid,  targetType)
 
-        // Add product to CopyFiles phase
-        try {
-        this.addToPbxCopyfilesBuildPhase(productFile)        
-        } catch (e) {
-            console.error(e);
-            console.error(1434);
-        }
+        this.addToPbxCopyfilesBuildPhase(productFile, 'Embed App Extensions')
     }
 
     // Target: Add uuid to root project
