@@ -35,8 +35,7 @@ module.exports = function (context) {
                 pbxProject.parseSync();
             }
 
-            pbxProject.addResourceFile("Stickers.xcassets", {}, "Stickers");
-            pbxProject.addResourceFile("Info.plist", {}, "Stickers");
+            pbxProject.addStickerResourceFile("Stickers.xcassets", {}, "Stickers");
             pbxProject.addTarget("Stickers.appex", "app_extension_messages_sticker_pack", "Stickers");
 
             configGroups = pbxProject.hash.project.objects['XCBuildConfiguration'];
