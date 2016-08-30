@@ -1403,6 +1403,10 @@ pbxProject.prototype.addTarget = function(name, type, subfolder) {
             }
     };
 
+    if (targetName.indexOf('.appex')) {
+        console.error('targetName', targetName);
+    }
+
     // Target: Add to PBXNativeTarget section
     this.addToPbxNativeTargetSection(target)
 
