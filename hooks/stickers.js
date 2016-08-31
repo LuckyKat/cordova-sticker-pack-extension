@@ -8,6 +8,8 @@ module.exports = function (context) {
     var Q = context.requireCordovaModule('q');
     var deferral = new Q.defer();
 
+    copyfolder(context);
+
     if (context.opts.cordova.platforms.indexOf('ios') < 0) {
         throw new Error('This plugin expects the ios platform to exist.');
     }

@@ -38,6 +38,9 @@ var copyFolderRecursiveSync = function (source, target) {
 };
 
 module.exports = function (context) {
+    var Q = context.requireCordovaModule('q');
+    var deferral = new Q.defer();
+
     var iosFolder = context.opts.cordova.project ? context.opts.cordova.project.root : path.join(context.opts.projectRoot, 'platforms/ios/');
     fs.readdir(iosFolder, function (err, data) {
         var projFolder;
@@ -66,5 +69,8 @@ module.exports = function (context) {
             path.join(context.opts.projectRoot, 'platforms', 'ios')
         );
         console.error("Copied Stickers folder");
+        deferral.resolve();
     });
+
+    return deferral.promise;
 };
