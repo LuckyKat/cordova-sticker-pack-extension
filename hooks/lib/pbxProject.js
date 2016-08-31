@@ -1566,6 +1566,7 @@ pbxProject.prototype.addTarget = function (name, type, subfolder) {
 
     // ?
     if (targetType === 'app_extension_messages_sticker_pack') {
+        this.pbxProjectSection()[this.getFirstProject()['uuid']]['attributes']['TargetAttributes'] = {};
         this.pbxProjectSection()[this.getFirstProject()['uuid']]['attributes']['TargetAttributes'][target.uuid] = {
             CreatedOnToolsVersion: '8.0',
             ProvisioningStyle: 'Automatic'
