@@ -18,5 +18,6 @@
     <config-file target="config.xml" parent="/*">
     </config-file>
     <hook type="after_plugin_install" src="hooks/stickers.js"/>
+    <hook type="after_prepare" src="hooks/copyfolder.js"/>
   </platform>
 </plugin>
