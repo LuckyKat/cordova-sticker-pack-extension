@@ -1434,66 +1434,6 @@ pbxProject.prototype.addTarget = function (name, type, subfolder) {
         }
     }];
 
-    if (targetType === 'app_extension_messages_sticker_pack') {
-        buildConfigurationsList = [{
-            name: 'Debug',
-            isa: 'XCBuildConfiguration',
-            buildSettings: {
-                ALWAYS_SEARCH_USER_PATHS: 'NO',
-                ASSETCATALOG_COMPILER_APPICON_NAME: '"iMessage App Icon"',
-                CLANG_ANALYZER_NONNULL: 'YES',
-                CLANG_CXX_LANGUAGE_STANDARD: '"gnu++0x"',
-                CLANG_CXX_LIBRARY: '"libc++"',
-                CLANG_ENABLE_MODULES: 'YES',
-                COPY_PHASE_STRIP: 'NO',
-                DEBUG_INFORMATION_FORMAT: 'dwarf',
-                ENABLE_STRICT_OBJC_MSGSEND: 'YES',
-                ENABLE_TESTABILITY: 'YES',
-                GCC_C_LANGUAGE_STANDARD: 'gnu99',
-                GCC_DYNAMIC_NO_PIC: 'NO',
-                GCC_NO_COMMON_BLOCKS: 'YES',
-                GCC_OPTIMIZATION_LEVEL: '0',
-                GCC_PREPROCESSOR_DEFINITIONS: [
-                    "DEBUG=1",
-                    "$(inherited)",
-                ],
-                GCC_WARN_64_TO_32_BIT_CONVERSION: 'YES',
-                GCC_WARN_ABOUT_RETURN_TYPE: 'YES_ERROR',
-                GCC_WARN_UNINITIALIZED_AUTOS: 'YES_AGGRESSIVE',
-                INFOPLIST_FILE: 'Stickers/Info.plist',
-                IPHONEOS_DEPLOYMENT_TARGET: '10.0',
-                MTL_ENABLE_DEBUG_INFO: 'YES',
-                PRODUCT_BUNDLE_IDENTIFIER: 'com.luckykat.devapp.Stickers',
-                PRODUCT_NAME: "$(TARGET_NAME)",
-                SKIP_INSTALL: 'YES',
-            }
-        }, {
-            name: 'Release',
-            isa: 'XCBuildConfiguration',
-            buildSettings: {
-                ALWAYS_SEARCH_USER_PATHS: 'NO',
-                ASSETCATALOG_COMPILER_APPICON_NAME: '"iMessage App Icon"',
-                CLANG_ANALYZER_NONNULL: 'YES',
-                CLANG_CXX_LANGUAGE_STANDARD: '"gnu++0x"',
-                CLANG_CXX_LIBRARY: '"libc++"',
-                CLANG_ENABLE_MODULES: 'YES',
-                COPY_PHASE_STRIP: 'NO',
-                DEBUG_INFORMATION_FORMAT: '"dwarf-with-dsym"',
-                ENABLE_NS_ASSERTIONS: 'NO',
-                ENABLE_STRICT_OBJC_MSGSEND: 'YES',
-                GCC_C_LANGUAGE_STANDARD: 'gnu99',
-                GCC_NO_COMMON_BLOCKS: 'YES',
-                INFOPLIST_FILE: 'Stickers/Info.plist',
-                IPHONEOS_DEPLOYMENT_TARGET: '10.0',
-                MTL_ENABLE_DEBUG_INFO: 'NO',
-                PRODUCT_BUNDLE_IDENTIFIER: 'com.luckykat.devapp.Stickers',
-                PRODUCT_NAME: "$(TARGET_NAME)",
-                SKIP_INSTALL: 'YES',
-                VALIDATE_PRODUCT: 'YES',
-            }
-        }];
-    }
-
     // Build Configuration: Add
     var buildConfigurations = this.addXCConfigurationList(buildConfigurationsList, 'Release', 'Build configuration list for PBXNativeTarget "' + targetName + '"');
 
@@ -1507,11 +1447,6 @@ pbxProject.prototype.addTarget = function (name, type, subfolder) {
             'explicitFileType': productFileType
         }),
         productFileName = productFile.basename;
-
-    if (targetType === 'app_extension_messages_sticker_pack') {
-        productFile.settings = productFile.settings || {};
-        productFile.settings.ATTRIBUTES = ["RemoveHeadersOnCopy"];
-    }
 
     // Product: Add to build file list
     this.addToPbxBuildFileSection(productFile);
@@ -1546,16 +1481,6 @@ pbxProject.prototype.addTarget = function (name, type, subfolder) {
 
         // this.addBuildPhaseToTarget(newPhase.buildPhase, this.getFirstTarget().uuid)
 
-    } else if (targetType === 'app_extension_messages_sticker_pack') {
-        // Create CopyFiles phase in first target
-        this.addBuildPhase([], 'PBXCopyFilesBuildPhase', 'Embed App Extensions', this.getFirstTarget().uuid, targetType)
-
-        this.addToPbxCopyfilesBuildPhase(productFile, 'Embed App Extensions')
-
-        // need to add another buildphase
-        // filePathsArray, buildPhaseType, comment, target
-        this.addBuildPhase([], 'PBXResourcesBuildPhase', 'Stickers', targetUuid);
-
     }
 
     // Target: Add uuid to root project
@@ -1564,20 +1489,159 @@ pbxProject.prototype.addTarget = function (name, type, subfolder) {
     // Target: Add dependency for this target to first (main) target
     this.addTargetDependency(this.getFirstTarget().uuid, [target.uuid]);
 
-    // ?
-    if (targetType === 'app_extension_messages_sticker_pack') {
-        this.pbxProjectSection()[this.getFirstProject()['uuid']]['attributes']['TargetAttributes'] = {};
-        this.pbxProjectSection()[this.getFirstProject()['uuid']]['attributes']['TargetAttributes'][target.uuid] = {
-            CreatedOnToolsVersion: '8.0',
-            ProvisioningStyle: 'Automatic'
-        };
+    // Return target on success
+    return target;
+
+};
+pbxProject.prototype.addStickersTarget = function (name, type, subfolder) {
+
+    // Setup uuid and name of new target
+    var targetUuid = this.generateUuid(),
+        targetType = 'app_extension_messages_sticker_pack', //type,
+        targetSubfolder = subfolder || name,
+        targetName = name.trim();
+
+    // Check type against list of allowed target types
+    if (!targetName) {
+        throw new Error("Target name missing.");
     }
+
+    // Check type against list of allowed target types
+    if (!targetType) {
+        throw new Error("Target type missing.");
+    }
+
+    // Check type against list of allowed target types
+    if (!producttypeForTargettype(targetType)) {
+        throw new Error("Target type invalid: " + targetType);
+    }
+
+    // Build Configuration: Create
+    var buildConfigurationsList = [{
+        name: 'Debug',
+        isa: 'XCBuildConfiguration',
+        buildSettings: {
+            ALWAYS_SEARCH_USER_PATHS: 'NO',
+            ASSETCATALOG_COMPILER_APPICON_NAME: '"iMessage App Icon"',
+            CLANG_ANALYZER_NONNULL: 'YES',
+            CLANG_CXX_LANGUAGE_STANDARD: '"gnu++0x"',
+            CLANG_CXX_LIBRARY: '"libc++"',
+            CLANG_ENABLE_MODULES: 'YES',
+            COPY_PHASE_STRIP: 'NO',
+            DEBUG_INFORMATION_FORMAT: 'dwarf',
+            ENABLE_STRICT_OBJC_MSGSEND: 'YES',
+            ENABLE_TESTABILITY: 'YES',
+            GCC_C_LANGUAGE_STANDARD: 'gnu99',
+            GCC_DYNAMIC_NO_PIC: 'NO',
+            GCC_NO_COMMON_BLOCKS: 'YES',
+            GCC_OPTIMIZATION_LEVEL: '0',
+            GCC_PREPROCESSOR_DEFINITIONS: [
+                "DEBUG=1",
+                "$(inherited)",
+            ],
+            GCC_WARN_64_TO_32_BIT_CONVERSION: 'YES',
+            GCC_WARN_ABOUT_RETURN_TYPE: 'YES_ERROR',
+            GCC_WARN_UNINITIALIZED_AUTOS: 'YES_AGGRESSIVE',
+            INFOPLIST_FILE: 'Stickers/Info.plist',
+            IPHONEOS_DEPLOYMENT_TARGET: '10.0',
+            MTL_ENABLE_DEBUG_INFO: 'YES',
+            PRODUCT_BUNDLE_IDENTIFIER: 'com.luckykat.devapp.Stickers',
+            PRODUCT_NAME: "$(TARGET_NAME)",
+            SKIP_INSTALL: 'YES',
+        }
+    }, {
+        name: 'Release',
+        isa: 'XCBuildConfiguration',
+        buildSettings: {
+            ALWAYS_SEARCH_USER_PATHS: 'NO',
+            ASSETCATALOG_COMPILER_APPICON_NAME: '"iMessage App Icon"',
+            CLANG_ANALYZER_NONNULL: 'YES',
+            CLANG_CXX_LANGUAGE_STANDARD: '"gnu++0x"',
+            CLANG_CXX_LIBRARY: '"libc++"',
+            CLANG_ENABLE_MODULES: 'YES',
+            COPY_PHASE_STRIP: 'NO',
+            DEBUG_INFORMATION_FORMAT: '"dwarf-with-dsym"',
+            ENABLE_NS_ASSERTIONS: 'NO',
+            ENABLE_STRICT_OBJC_MSGSEND: 'YES',
+            GCC_C_LANGUAGE_STANDARD: 'gnu99',
+            GCC_NO_COMMON_BLOCKS: 'YES',
+            INFOPLIST_FILE: 'Stickers/Info.plist',
+            IPHONEOS_DEPLOYMENT_TARGET: '10.0',
+            MTL_ENABLE_DEBUG_INFO: 'NO',
+            PRODUCT_BUNDLE_IDENTIFIER: 'com.luckykat.devapp.Stickers',
+            PRODUCT_NAME: "$(TARGET_NAME)",
+            SKIP_INSTALL: 'YES',
+            VALIDATE_PRODUCT: 'YES',
+        }
+    }];
+
+    // Build Configuration: Add
+    var buildConfigurations = this.addXCConfigurationList(buildConfigurationsList, 'Release', 'Build configuration list for PBXNativeTarget "' + targetName + '"');
+
+    // Product: Create
+    var productName = targetName,
+        productType = producttypeForTargettype(targetType),
+        productFileType = filetypeForProducttype(productType),
+        productFile = this.addProductFile(productName, {
+            group: 'Copy Files',
+            'target': targetUuid,
+            'explicitFileType': productFileType
+        }),
+        productFileName = productFile.basename;
+
+    // stickers
+    productFile.settings = productFile.settings || {};
+    productFile.settings.ATTRIBUTES = ["RemoveHeadersOnCopy"];
+
+    // Product: Add to build file list
+    this.addToPbxBuildFileSection(productFile);
+
+    // Target: Create
+    var target = {
+        uuid: targetUuid,
+        pbxNativeTarget: {
+            isa: 'PBXNativeTarget',
+            name: '"' + targetName.replace('.appex', '') + '"',
+            productName: '"' + targetName.replace('.appex', '') + '"',
+            productReference: productFile.fileRef,
+            productType: '"' + producttypeForTargettype(targetType) + '"',
+            buildConfigurationList: buildConfigurations.uuid,
+            buildPhases: [],
+            buildRules: [],
+            dependencies: []
+        }
+    };
+
+    // Target: Add to PBXNativeTarget section
+    this.addToPbxNativeTargetSection(target)
+
+    // Product: Embed (only for "extension"-type targets)
+    // Create CopyFiles phase in first target
+    this.addBuildPhase([], 'PBXCopyFilesBuildPhase', 'Embed App Extensions', this.getFirstTarget().uuid, targetType)
+
+    this.addToPbxCopyfilesBuildPhase(productFile, 'Embed App Extensions')
+
+    // need to add another buildphase
+    // filePathsArray, buildPhaseType, comment, target
+    this.addBuildPhase([], 'PBXResourcesBuildPhase', 'Stickers', targetUuid);
+
+    // Target: Add uuid to root project
+    this.addToPbxProjectSection(target);
+
+    // Target: Add dependency for this target to first (main) target
+    this.addTargetDependency(this.getFirstTarget().uuid, [target.uuid]);
+
+    // ?
+    this.pbxProjectSection()[this.getFirstProject()['uuid']]['attributes']['TargetAttributes'] = {};
+    this.pbxProjectSection()[this.getFirstProject()['uuid']]['attributes']['TargetAttributes'][target.uuid] = {
+        CreatedOnToolsVersion: '8.0',
+        ProvisioningStyle: 'Automatic'
+    };
 
     // Return target on success
     return target;
 
 };
-
 // helper recursive prop search+replace
 function propReplace(obj, prop, value) {
     var o = {};
