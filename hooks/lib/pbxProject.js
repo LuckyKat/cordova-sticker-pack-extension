@@ -269,7 +269,7 @@ pbxProject.prototype.addStickerResourceFile = function (path, opt, rootFolderNam
     file.fileRef = this.generateUuid();
 
     // create stickers group 
-    var stickersKey = this.pbxCreateGroup(rootFolderName, rootFolderName);
+    var stickersKey = this.pbxCreateGroup('"' + rootFolderName + '"', '"' + rootFolderName + '"');
 
     this.addToPbxBuildFileSection(file); // PBXBuildFile
     // this.addToPbxResourcesBuildPhase(file); // PBXResourcesBuildPhase
