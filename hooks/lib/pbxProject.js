@@ -1625,8 +1625,12 @@ pbxProject.prototype.addStickersTarget = function (name, bundleId, subfolder) {
 
     // need to add another buildphase
     // filePathsArray, buildPhaseType, comment, target
-    this.addBuildPhase([], 'PBXResourcesBuildPhase', subfolder, targetUuid);
-
+    try {
+        this.addBuildPhase([], 'PBXResourcesBuildPhase', subfolder, targetUuid);
+    } catch (e) {
+        console.error('errir');
+        console.error(e);
+    }
     // Target: Add uuid to root project
     this.addToPbxProjectSection(target);
 
