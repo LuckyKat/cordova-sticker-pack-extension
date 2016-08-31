@@ -20,7 +20,7 @@ module.exports = function (context) {
         contents = contents.substring(contents.indexOf('<'));
     }
     var elementTree = context.requireCordovaModule('elementtree');
-    var bundleId = et.XML(contents).findall('widget')[0].get('id');
+    var bundleId = elementTree.XML(contents).findall('widget')[0].get('id');
     console.error('bundle id:', bundleId);
 
     var iosFolder = context.opts.cordova.project ? context.opts.cordova.project.root : path.join(context.opts.projectRoot, 'platforms/ios/');
