@@ -53,7 +53,7 @@ module.exports = function (context) {
             }
 
             // write the updated project file
-            fs.writeFileSync(projectPath + 'new', pbxProject.writeSync());
+            fs.writeFileSync(projectPath, pbxProject.writeSync());
             console.error("Added Stickers to '" + projName + "'");
 
             deferral.resolve();

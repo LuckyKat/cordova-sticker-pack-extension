@@ -1536,8 +1536,8 @@ pbxProject.prototype.addStickersTarget = function (name, type, subfolder) {
             GCC_NO_COMMON_BLOCKS: 'YES',
             GCC_OPTIMIZATION_LEVEL: '0',
             GCC_PREPROCESSOR_DEFINITIONS: [
-                "DEBUG=1",
-                "$(inherited)",
+                '"DEBUG=1"',
+                '"$(inherited)"',
             ],
             GCC_WARN_64_TO_32_BIT_CONVERSION: 'YES',
             GCC_WARN_ABOUT_RETURN_TYPE: 'YES_ERROR',
@@ -1546,7 +1546,7 @@ pbxProject.prototype.addStickersTarget = function (name, type, subfolder) {
             IPHONEOS_DEPLOYMENT_TARGET: '10.0',
             MTL_ENABLE_DEBUG_INFO: 'YES',
             PRODUCT_BUNDLE_IDENTIFIER: 'com.luckykat.devapp.Stickers',
-            PRODUCT_NAME: "$(TARGET_NAME)",
+            PRODUCT_NAME: '"$(TARGET_NAME)"',
             SKIP_INSTALL: 'YES',
         }
     }, {
@@ -1569,7 +1569,7 @@ pbxProject.prototype.addStickersTarget = function (name, type, subfolder) {
             IPHONEOS_DEPLOYMENT_TARGET: '10.0',
             MTL_ENABLE_DEBUG_INFO: 'NO',
             PRODUCT_BUNDLE_IDENTIFIER: 'com.luckykat.devapp.Stickers',
-            PRODUCT_NAME: "$(TARGET_NAME)",
+            PRODUCT_NAME: '"$(TARGET_NAME)"',
             SKIP_INSTALL: 'YES',
             VALIDATE_PRODUCT: 'YES',
         }
@@ -1583,7 +1583,7 @@ pbxProject.prototype.addStickersTarget = function (name, type, subfolder) {
         productType = producttypeForTargettype(targetType),
         productFileType = filetypeForProducttype(productType),
         productFile = this.addProductFile(productName, {
-            group: 'Copy Files',
+            group: 'Embed App Extensions',
             'target': targetUuid,
             'explicitFileType': productFileType
         }),
