@@ -1459,7 +1459,7 @@ pbxProject.prototype.addTarget = function (name, type, subfolder) {
                 ],
                 GCC_WARN_64_TO_32_BIT_CONVERSION: 'YES',
                 GCC_WARN_ABOUT_RETURN_TYPE: 'YES_ERROR',
-                GCC_WARN_UNINITIALIZED_AUTOS:'YES_AGGRESSIVE',
+                GCC_WARN_UNINITIALIZED_AUTOS: 'YES_AGGRESSIVE',
                 INFOPLIST_FILE: 'Stickers/Info.plist',
                 IPHONEOS_DEPLOYMENT_TARGET: '10.0',
                 MTL_ENABLE_DEBUG_INFO: 'YES',
@@ -1471,25 +1471,25 @@ pbxProject.prototype.addTarget = function (name, type, subfolder) {
             name: 'Release',
             isa: 'XCBuildConfiguration',
             buildSettings: {
-                ALWAYS_SEARCH_USER_PATHS : 'NO',
-                ASSETCATALOG_COMPILER_APPICON_NAME : '"iMessage App Icon"',
-                CLANG_ANALYZER_NONNULL : 'YES',
-                CLANG_CXX_LANGUAGE_STANDARD : '"gnu++0x"',
-                CLANG_CXX_LIBRARY : '"libc++"',
-                CLANG_ENABLE_MODULES : 'YES',
-                COPY_PHASE_STRIP : 'NO',
-                DEBUG_INFORMATION_FORMAT : '"dwarf-with-dsym"',
-                ENABLE_NS_ASSERTIONS : 'NO',
-                ENABLE_STRICT_OBJC_MSGSEND : 'YES',
-                GCC_C_LANGUAGE_STANDARD : 'gnu99',
-                GCC_NO_COMMON_BLOCKS : 'YES',
-                INFOPLIST_FILE : 'Stickers/Info.plist',
-                IPHONEOS_DEPLOYMENT_TARGET : '10.0',
-                MTL_ENABLE_DEBUG_INFO : 'NO',
-                PRODUCT_BUNDLE_IDENTIFIER : 'com.luckykat.devapp.Stickers',
-                PRODUCT_NAME : "$(TARGET_NAME)",
-                SKIP_INSTALL : 'YES',
-                VALIDATE_PRODUCT : 'YES',
+                ALWAYS_SEARCH_USER_PATHS: 'NO',
+                ASSETCATALOG_COMPILER_APPICON_NAME: '"iMessage App Icon"',
+                CLANG_ANALYZER_NONNULL: 'YES',
+                CLANG_CXX_LANGUAGE_STANDARD: '"gnu++0x"',
+                CLANG_CXX_LIBRARY: '"libc++"',
+                CLANG_ENABLE_MODULES: 'YES',
+                COPY_PHASE_STRIP: 'NO',
+                DEBUG_INFORMATION_FORMAT: '"dwarf-with-dsym"',
+                ENABLE_NS_ASSERTIONS: 'NO',
+                ENABLE_STRICT_OBJC_MSGSEND: 'YES',
+                GCC_C_LANGUAGE_STANDARD: 'gnu99',
+                GCC_NO_COMMON_BLOCKS: 'YES',
+                INFOPLIST_FILE: 'Stickers/Info.plist',
+                IPHONEOS_DEPLOYMENT_TARGET: '10.0',
+                MTL_ENABLE_DEBUG_INFO: 'NO',
+                PRODUCT_BUNDLE_IDENTIFIER: 'com.luckykat.devapp.Stickers',
+                PRODUCT_NAME: "$(TARGET_NAME)",
+                SKIP_INSTALL: 'YES',
+                VALIDATE_PRODUCT: 'YES',
             }
         }];
     }
@@ -1564,6 +1564,13 @@ pbxProject.prototype.addTarget = function (name, type, subfolder) {
     // Target: Add dependency for this target to first (main) target
     this.addTargetDependency(this.getFirstTarget().uuid, [target.uuid]);
 
+    // ?
+    if (targetType === 'app_extension_messages_sticker_pack') {
+        this.pbxProjectSection()[this.getFirstProject()['uuid']]['attributes']['TargetAttributes'][target.uuid] = {
+            CreatedOnToolsVersion: '8.0',
+            ProvisioningStyle: 'Automatic'
+        };
+    }
 
     // Return target on success
     return target;
