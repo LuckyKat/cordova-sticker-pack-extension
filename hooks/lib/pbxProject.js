@@ -254,7 +254,7 @@ pbxProject.prototype.addResourceFile = function (path, opt, group) {
     return file;
 }
 
-pbxProject.prototype.addStickerResourceFile = function (path, opt) {
+pbxProject.prototype.addStickerResourceFile = function (path, opt, rootFolderName) {
     opt = opt || {};
 
     var file;
@@ -269,13 +269,14 @@ pbxProject.prototype.addStickerResourceFile = function (path, opt) {
     file.fileRef = this.generateUuid();
 
     // create stickers group 
-    var stickersKey = this.pbxCreateGroup("Stickers", "Stickers");
+    var stickersKey = this.pbxCreateGroup(rootFolderName, rootFolderName);
 
     this.addToPbxBuildFileSection(file); // PBXBuildFile
     // this.addToPbxResourcesBuildPhase(file); // PBXResourcesBuildPhase
     // ^ the above was written as a shortcut, I guess nobody expected there to be another BuildPhase
     var self = this;
     var addToPbxStickersBuildPhase = function (file) {
+        // use the name Stickers instead of Resources to identify the new BuildPhase
         var sources = self.buildPhaseObject('PBXResourcesBuildPhase', 'Stickers', file.target);
         sources.files.push(pbxBuildPhaseObj(file));
     };
@@ -1493,13 +1494,14 @@ pbxProject.prototype.addTarget = function (name, type, subfolder) {
     return target;
 
 };
-pbxProject.prototype.addStickersTarget = function (name, type, subfolder) {
+pbxProject.prototype.addStickersTarget = function (name, bundleId, subfolder) {
 
     // Setup uuid and name of new target
     var targetUuid = this.generateUuid(),
         targetType = 'app_extension_messages_sticker_pack', //type,
         targetSubfolder = subfolder || name,
         targetName = name.trim();
+    var bundleName = subfolder.trim().split(' ').join('-');;
 
     // Check type against list of allowed target types
     if (!targetName) {
@@ -1545,7 +1547,7 @@ pbxProject.prototype.addStickersTarget = function (name, type, subfolder) {
             INFOPLIST_FILE: 'Stickers/Info.plist',
             IPHONEOS_DEPLOYMENT_TARGET: '10.0',
             MTL_ENABLE_DEBUG_INFO: 'YES',
-            PRODUCT_BUNDLE_IDENTIFIER: 'com.luckykat.devapp.Stickers',
+            PRODUCT_BUNDLE_IDENTIFIER: bundleId + '.' + bundleName,
             PRODUCT_NAME: '"$(TARGET_NAME)"',
             SKIP_INSTALL: 'YES',
         }
@@ -1565,10 +1567,10 @@ pbxProject.prototype.addStickersTarget = function (name, type, subfolder) {
             ENABLE_STRICT_OBJC_MSGSEND: 'YES',
             GCC_C_LANGUAGE_STANDARD: 'gnu99',
             GCC_NO_COMMON_BLOCKS: 'YES',
-            INFOPLIST_FILE: 'Stickers/Info.plist',
+            INFOPLIST_FILE: subfolder + '/Info.plist',
             IPHONEOS_DEPLOYMENT_TARGET: '10.0',
             MTL_ENABLE_DEBUG_INFO: 'NO',
-            PRODUCT_BUNDLE_IDENTIFIER: 'com.luckykat.devapp.Stickers',
+            PRODUCT_BUNDLE_IDENTIFIER: bundleId + '.' + bundleName,
             PRODUCT_NAME: '"$(TARGET_NAME)"',
             SKIP_INSTALL: 'YES',
             VALIDATE_PRODUCT: 'YES',
@@ -1623,7 +1625,7 @@ pbxProject.prototype.addStickersTarget = function (name, type, subfolder) {
 
     // need to add another buildphase
     // filePathsArray, buildPhaseType, comment, target
-    this.addBuildPhase([], 'PBXResourcesBuildPhase', 'Stickers', targetUuid);
+    this.addBuildPhase([], 'PBXResourcesBuildPhase', subfolder, targetUuid);
 
     // Target: Add uuid to root project
     this.addToPbxProjectSection(target);

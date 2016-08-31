@@ -13,6 +13,16 @@ module.exports = function (context) {
         throw new Error('This plugin expects the ios platform to exist.');
     }
 
+    // Get the bundleid from config.xml
+    var contents = fs.readFileSync(path.join(context.opts.projectRoot, "config.xml"), 'utf-8');
+    if (contents) {
+        // BOM
+        contents = contents.substring(contents.indexOf('<'));
+    }
+    var elementTree = context.requireCordovaModule('elementtree');
+    var bundleId = elementTree.findall('./widget')[0].get('id');
+    console.error('bundle id:', bundleId);
+
     var iosFolder = context.opts.cordova.project ? context.opts.cordova.project.root : path.join(context.opts.projectRoot, 'platforms/ios/');
     console.error("iosFolder: " + iosFolder);
 
@@ -35,8 +45,10 @@ module.exports = function (context) {
                 pbxProject.parseSync();
             }
 
-            pbxProject.addStickersTarget("Stickers.appex", "app_extension_messages_sticker_pack", "Stickers");
-            stickersKey = pbxProject.addStickerResourceFile("Stickers.xcassets", {}, "Stickers");
+            var stickerPackName = projName + " Stickers";
+
+            pbxProject.addStickersTarget(stickerPackName + ".appex", bundleId, stickerPackName);
+            stickersKey = pbxProject.addStickerResourceFile("Stickers.xcassets", {}, stickerPackName);
 
             // cordova makes a CustomTemplate pbxgroup, the stickersGroup must be added there
             var customTemplateKey = pbxProject.findPBXGroupKey({
@@ -47,7 +59,7 @@ module.exports = function (context) {
             }
 
 
-            configGroups = pbxProject.hash.project.objects['XCBuildConfiguration'];
+            configGroups = pbxProject.hash.project.objects.XCBuildConfiguration;
             for (var key in configGroups) {
                 config = configGroups[key];
             }
