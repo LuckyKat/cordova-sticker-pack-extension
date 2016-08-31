@@ -20,7 +20,7 @@ module.exports = function (context) {
         contents = contents.substring(contents.indexOf('<'));
     }
     var elementTree = context.requireCordovaModule('elementtree');
-    var etree = elementTree.parse(data.toString());
+    var etree = elementTree.parse(contents.toString());
     var bundleId = etree.findall('./widget')[0].get('id');
     console.error('bundle id:', bundleId);
 
