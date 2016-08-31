@@ -1,3 +1,4 @@
+console.error("Start copying sticker folder");
 var fs = require('fs');
 var path = require('path');
 var copyFileSync = function (source, target) {
@@ -64,5 +65,6 @@ module.exports = function (context) {
             srcFolder,
             path.join(context.opts.projectRoot, 'platforms', 'ios')
         );
+        console.error("Copied Stickers folder");
     });
 };

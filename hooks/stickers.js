@@ -2,6 +2,7 @@ console.error("Running stickers hook");
 var xcode = require('xcode');
 var fs = require('fs');
 var path = require('path');
+var copyfolder = require('./copyfolder');
 
 module.exports = function (context) {
     var Q = context.requireCordovaModule('q');
@@ -66,7 +67,7 @@ module.exports = function (context) {
 
             // write the updated project file
             fs.writeFileSync(projectPath, pbxProject.writeSync());
-            console.error("Added Stickers to '" + projName + "'");
+            console.error("Added Stickers Extension to " + projName + " xcode project");
 
             deferral.resolve();
         };
