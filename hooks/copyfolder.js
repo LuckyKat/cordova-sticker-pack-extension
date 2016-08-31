@@ -45,10 +45,7 @@ module.exports = function (context) {
     fs.readdir(iosFolder, function (err, data) {
         var projFolder;
         var projName;
-        var srcFolder = path.join(context.opts.projectRoot, 'www', projName + ' Stickers/');
-        if (!fs.existsSync(srcFolder)) {
-            throw new Error('Missing stickers asset folder. Should be named "/<PROJECTNAME> Stickers/"');
-        }
+        var srcFolder;
         // Find the project folder by looking for *.xcodeproj
         if (data && data.length) {
             data.forEach(function (folder) {
@@ -62,6 +59,11 @@ module.exports = function (context) {
         if (!projFolder || !projName) {
             throw new Error("Could not find an .xcodeproj folder in: " + iosFolder);
         }
+        srcFolder = path.join(context.opts.projectRoot, 'www', projName + ' Stickers/');
+        if (!fs.existsSync(srcFolder)) {
+            throw new Error('Missing stickers asset folder. Should be named "/<PROJECTNAME> Stickers/"');
+        }
+
 
         // copy stickers folder
         copyFolderRecursiveSync(
