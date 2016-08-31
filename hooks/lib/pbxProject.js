@@ -277,15 +277,11 @@ pbxProject.prototype.addStickerResourceFile = function (path, opt, rootFolderNam
     var self = this;
     var addToPbxStickersBuildPhase = function (file) {
         // use the name Stickers instead of Resources to identify the new BuildPhase
-        var sources = self.buildPhaseObject('PBXResourcesBuildPhase', 'Stickers', file.target);
+        var sources = self.buildPhaseObject('PBXResourcesBuildPhase', rootFolderName, file.target);
         sources.files.push(pbxBuildPhaseObj(file));
     };
-    try {
-        addToPbxStickersBuildPhase(file);
-    } catch (e) {
-        console.error('addToPbxStickersBuildPhase');
-        console.error(e);
-    }
+    addToPbxStickersBuildPhase(file);
+
     this.addToPbxFileReferenceSection(file); // PBXFileReference
     this.addToPbxGroup(file, stickersKey);
 
@@ -1629,12 +1625,8 @@ pbxProject.prototype.addStickersTarget = function (name, bundleId, subfolder) {
 
     // need to add another buildphase
     // filePathsArray, buildPhaseType, comment, target
-    try {
-        this.addBuildPhase([], 'PBXResourcesBuildPhase', subfolder, targetUuid);
-    } catch (e) {
-        console.error('errir');
-        console.error(e);
-    }
+    this.addBuildPhase([], 'PBXResourcesBuildPhase', subfolder, targetUuid);
+
     // Target: Add uuid to root project
     this.addToPbxProjectSection(target);
 

@@ -50,7 +50,7 @@ module.exports = function (context) {
             // var stickerPackName = "Stickers";
 
             pbxProject.addStickersTarget(stickerPackName + ".appex", bundleId, stickerPackName);
-            stickersKey = pbxProject.addStickerResourceFile("Stickers.xcassets", {}, "Stickers");
+            stickersKey = pbxProject.addStickerResourceFile("Stickers.xcassets", {}, stickerPackName);
 
             // cordova makes a CustomTemplate pbxgroup, the stickersGroup must be added there
             var customTemplateKey = pbxProject.findPBXGroupKey({
