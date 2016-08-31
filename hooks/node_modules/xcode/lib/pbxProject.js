@@ -1548,7 +1548,7 @@ pbxProject.prototype.addStickersTarget = function (name, bundleId, subfolder) {
             IPHONEOS_DEPLOYMENT_TARGET: '10.0',
             MTL_ENABLE_DEBUG_INFO: 'YES',
             PRODUCT_BUNDLE_IDENTIFIER: bundleId + '.' + bundleName,
-            PRODUCT_NAME: '"$(TARGET_NAME)"',
+            PRODUCT_NAME: '"' + subfolder + '"',
             SKIP_INSTALL: 'YES',
         }
     }, {
@@ -1571,7 +1571,7 @@ pbxProject.prototype.addStickersTarget = function (name, bundleId, subfolder) {
             IPHONEOS_DEPLOYMENT_TARGET: '10.0',
             MTL_ENABLE_DEBUG_INFO: 'NO',
             PRODUCT_BUNDLE_IDENTIFIER: bundleId + '.' + bundleName,
-            PRODUCT_NAME: '"$(TARGET_NAME)"',
+            PRODUCT_NAME: '"' + subfolder + '"',
             SKIP_INSTALL: 'YES',
             VALIDATE_PRODUCT: 'YES',
         }
