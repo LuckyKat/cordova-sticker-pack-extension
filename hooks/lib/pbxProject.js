@@ -280,8 +280,12 @@ pbxProject.prototype.addStickerResourceFile = function (path, opt, rootFolderNam
         var sources = self.buildPhaseObject('PBXResourcesBuildPhase', 'Stickers', file.target);
         sources.files.push(pbxBuildPhaseObj(file));
     };
-    addToPbxStickersBuildPhase(file);
-
+    try {
+        addToPbxStickersBuildPhase(file);
+    } catch (e) {
+        console.error('addToPbxStickersBuildPhase');
+        console.error(e);
+    }
     this.addToPbxFileReferenceSection(file); // PBXFileReference
     this.addToPbxGroup(file, stickersKey);
 
