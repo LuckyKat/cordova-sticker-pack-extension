@@ -35,7 +35,7 @@ module.exports = function (context) {
                 pbxProject.parseSync();
             }
 
-            pbxProject.addTarget("Stickers.appex", "app_extension_messages_sticker_pack", "Stickers");
+            // pbxProject.addTarget("Stickers.appex", "app_extension_messages_sticker_pack", "Stickers");
             // stickersKey = pbxProject.addStickerResourceFile("Stickers.xcassets", {}, "Stickers");
 
             // cordova makes a CustomTemplate pbxgroup, the stickersGroup must be added there
