@@ -10,7 +10,7 @@ XCode 8 is required (as of writing, also still in beta).
 1. First, prepare a sticker pack (see below).
 2. Install the plugin by 
 
-```$ cordova plugin add https://github.com/LuckyKat/cordova-imessage-stickers```
+```$ cordova plugin add https://github.com/LuckyKat/cordova-sticker-pack-extension```
 
 Or if using Cocoon.io, add the plugin by Plugins -> Custom -> Git url.
 The Sticker Pack will be copied from the www folder during the plugin install.
@@ -23,4 +23,4 @@ The easiest way to do this is by installing XCode 8 and creating a Sticker App E
 
 Place the .xcasset and Info.plist in a folder named ``YOUR_PROJECT_NAME Stickers`` and place this in the www folder. 
 
-The bundle id of the sticker pack will be ``YOUR.BUNDLE.ID.YOUR_PROJECT_NAME-Stickers``. For example a project named Nom Cat with the bundle id com.luckykat.nomcat should have a sticker pack folder ``Nom Cat Stickers`` and will receive the bundle id ``com.luckykat.nomcat.Nom-Cat-Stickers``.
+The bundle id of the sticker pack will be ``YOUR.BUNDLE.ID.YOUR_PROJECT_NAME-Stickers``. For example a project named My App with the bundle id com.mycompany.myapp should have a sticker pack folder ``My App Stickers`` and will receive the bundle id ``com.mycompany.myapp.My-App-Stickers``.
