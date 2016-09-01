@@ -1,0 +1,31 @@
+{
+  "name": "cordova-sticker-pack-extension",
+  "version": "1.0.0",
+  "description": "Adds a Sticker Pack Extension to your Cordova project",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LuckyKat/cordova-sticker-pack-extension"
+  },
+  "keywords": [
+    "iOS",
+    "iOS10",
+    "iMessage",
+    "Stickers",
+    "Sticker",
+    "Pack",
+    "Sticker",
+    "Pack",
+    "Extension",
+    "Cordova",
+    "Cocoon"
+  ],
+  "author": "Hernan Zhou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LuckyKat/cordova-sticker-pack-extension/issues"
+  },
+  "homepage": "https://github.com/LuckyKat/cordova-sticker-pack-extension"
+}

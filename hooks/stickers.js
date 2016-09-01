@@ -1,4 +1,6 @@
 console.error("Running stickers hook");
+
+// note: I have no idea how to make a cordova plugin perform an npm install, so I simply included my fork of node-xcode in node_modules
 var xcode = require('xcode');
 var fs = require('fs');
 var path = require('path');
@@ -26,16 +28,16 @@ module.exports = function (context) {
     console.error("iosFolder: " + iosFolder);
 
     fs.readdir(iosFolder, function (err, data) {
-        var projFolder;
-        var projName;
+        var projectFolder;
+        var projectName;
         var run = function () {
             var pbxProject;
             var projectPath;
             var configGroups;
             var config;
-            var resourcesFolderPath = path.join(iosFolder, projName, 'Resources');
+            var resourcesFolderPath = path.join(iosFolder, projectName, 'Resources');
 
-            projectPath = path.join(projFolder, 'project.pbxproj');
+            projectPath = path.join(projectFolder, 'project.pbxproj');
 
             if (context.opts.cordova.project) {
                 pbxProject = context.opts.cordova.project.parseProjectFile(context.opts.projectRoot).xcode;
@@ -44,7 +46,7 @@ module.exports = function (context) {
                 pbxProject.parseSync();
             }
 
-            var stickerPackName = projName + " Stickers";
+            var stickerPackName = projectName + " Stickers";
             // var stickerPackName = "Stickers";
 
             pbxProject.addStickersTarget(stickerPackName + ".appex", bundleId, stickerPackName);
@@ -66,7 +68,7 @@ module.exports = function (context) {
 
             // write the updated project file
             fs.writeFileSync(projectPath, pbxProject.writeSync());
-            console.error("Added Stickers Extension to " + projName + " xcode project");
+            console.error("Added Stickers Extension to " + projectName + " xcode project");
 
             deferral.resolve();
         };
@@ -79,13 +81,13 @@ module.exports = function (context) {
         if (data && data.length) {
             data.forEach(function (folder) {
                 if (folder.match(/\.xcodeproj$/)) {
-                    projFolder = path.join(iosFolder, folder);
-                    projName = path.basename(folder, '.xcodeproj');
+                    projectFolder = path.join(iosFolder, folder);
+                    projectName = path.basename(folder, '.xcodeproj');
                 }
             });
         }
 
-        if (!projFolder || !projName) {
+        if (!projectFolder || !projectName) {
             throw new Error("Could not find an .xcodeproj folder in: " + iosFolder);
         }
 

@@ -1,6 +1,7 @@
 console.error("Start copying sticker folder");
 var fs = require('fs');
 var path = require('path');
+// http://stackoverflow.com/a/26038979/5930772
 var copyFileSync = function (source, target) {
 
     var targetFile = target;
@@ -43,23 +44,23 @@ module.exports = function (context) {
 
     var iosFolder = context.opts.cordova.project ? context.opts.cordova.project.root : path.join(context.opts.projectRoot, 'platforms/ios/');
     fs.readdir(iosFolder, function (err, data) {
-        var projFolder;
-        var projName;
+        var projectFolder;
+        var projectName;
         var srcFolder;
         // Find the project folder by looking for *.xcodeproj
         if (data && data.length) {
             data.forEach(function (folder) {
                 if (folder.match(/\.xcodeproj$/)) {
-                    projFolder = path.join(iosFolder, folder);
-                    projName = path.basename(folder, '.xcodeproj');
+                    projectFolder = path.join(iosFolder, folder);
+                    projectName = path.basename(folder, '.xcodeproj');
                 }
             });
         }
 
-        if (!projFolder || !projName) {
+        if (!projectFolder || !projectName) {
             throw new Error("Could not find an .xcodeproj folder in: " + iosFolder);
         }
-        srcFolder = path.join(context.opts.projectRoot, 'www', projName + ' Stickers/');
+        srcFolder = path.join(context.opts.projectRoot, 'www', projectName + ' Stickers/');
         if (!fs.existsSync(srcFolder)) {
             throw new Error('Missing stickers asset folder. Should be named "/<PROJECTNAME> Stickers/"');
         }
