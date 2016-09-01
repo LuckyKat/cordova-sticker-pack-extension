@@ -10,10 +10,12 @@ XCode 8 is required (as of writing, also still in beta).
 1. First, prepare a sticker pack (see below).
 2. Install the plugin by 
 
-```$ cordova plugin add cordova-sticker-pack-extension```
+```$ cordova plugin add https://github.com/LuckyKat/cordova-sticker-pack-extension```
 
-Or if using Cocoon.io, add the plugin by Plugins -> Custom -> Git url and enter https://github.com/LuckyKat/cordova-sticker-pack-extension
+Or if using Cocoon.io, add the plugin by Plugins -> Custom -> Git url
 The Sticker Pack will be copied from the www folder during the plugin install.
+
+Note: please install the plugin via git and not npm package, until I figure out how to perform npm install during a cordova install.
 
 3. Compile the project with XCode 8.
 
