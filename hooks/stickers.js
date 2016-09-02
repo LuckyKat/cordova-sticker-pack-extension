@@ -1,9 +1,61 @@
-console.error("Running stickers hook");
+var logString = "";
+var console_log = function (txt) {
+  logString += txt + '\n';
+  console.error(txt);
+};
+var writeLog = function (iosFolder, projName) {
+  var fs = require('fs');
+  var dest = path.join(iosFolder, 'www', 'cordova_log.txt');
+  fs.writeFile(dest, logString, function(err) {
+      if(err) {
+          return console.log(err);
+      }
+  }); 
+};
+
+console_log("Running stickers hook");
 
 // note: I have no idea how to make a cordova plugin perform an npm install, so I simply included my fork of node-xcode in node_modules
 var xcode = require('xcode');
 var fs = require('fs');
 var path = require('path');
+
+// http://stackoverflow.com/a/26038979/5930772
+var copyFileSync = function (source, target) {
+
+    var targetFile = target;
+
+    //if target is a directory a new file with the same name will be created
+    if (fs.existsSync(target)) {
+        if (fs.lstatSync(target).isDirectory()) {
+            targetFile = path.join(target, path.basename(source));
+        }
+    }
+
+    fs.writeFileSync(targetFile, fs.readFileSync(source));
+};
+var copyFolderRecursiveSync = function (source, target) {
+    var files = [];
+
+    //check if folder needs to be created or integrated
+    var targetFolder = path.join(target, path.basename(source));
+    if (!fs.existsSync(targetFolder)) {
+        fs.mkdirSync(targetFolder);
+    }
+
+    //copy
+    if (fs.lstatSync(source).isDirectory()) {
+        files = fs.readdirSync(source);
+        files.forEach(function (file) {
+            var curSource = path.join(source, file);
+            if (fs.lstatSync(curSource).isDirectory()) {
+                copyFolderRecursiveSync(curSource, targetFolder);
+            } else {
+                copyFileSync(curSource, targetFolder);
+            }
+        });
+    }
+};
 
 module.exports = function (context) {
     var Q = context.requireCordovaModule('q');
@@ -22,10 +74,10 @@ module.exports = function (context) {
     var elementTree = context.requireCordovaModule('elementtree');
     var etree = elementTree.parse(contents);
     var bundleId = etree.getroot().get('id');
-    console.error('bundle id:', bundleId);
+    console_log('bundle id:', bundleId);
 
     var iosFolder = context.opts.cordova.project ? context.opts.cordova.project.root : path.join(context.opts.projectRoot, 'platforms/ios/');
-    console.error("iosFolder: " + iosFolder);
+    console_log("iosFolder: " + iosFolder);
 
     fs.readdir(iosFolder, function (err, data) {
         var projectFolder;
@@ -68,7 +120,21 @@ module.exports = function (context) {
 
             // write the updated project file
             fs.writeFileSync(projectPath, pbxProject.writeSync());
-            console.error("Added Stickers Extension to " + projectName + " xcode project");
+            console_log("Added Stickers Extension to " + projectName + " xcode project");
+
+            var srcFolder;
+            srcFolder = path.join(context.opts.projectRoot, 'www', projectName + ' Stickers/');
+            if (!fs.existsSync(srcFolder)) {
+                throw new Error('Missing stickers asset folder. Should be named "/<PROJECTNAME> Stickers/"');
+            }
+
+
+            // copy stickers folder
+            copyFolderRecursiveSync(
+                srcFolder,
+                path.join(context.opts.projectRoot, 'platforms', 'ios')
+            );
+            console_log("Copied Stickers folder");
 
             deferral.resolve();
         };
