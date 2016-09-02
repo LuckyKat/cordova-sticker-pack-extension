@@ -141,12 +141,6 @@ module.exports = function (context) {
         writeLog(iosFolder);
     };
 
-    if (err) {
-        console_log("err");
-        writeLog(iosFolder);
-        throw err;
-    }
-
     // Find the project folder by looking for *.xcodeproj
     if (data && data.length) {
         data.forEach(function (folder) {
