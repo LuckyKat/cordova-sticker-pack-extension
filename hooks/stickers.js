@@ -77,9 +77,7 @@ var copyFolderRecursiveSync = function (source, target) {
     }
 };
 
-module.exports = function (context) {
-    initLog(iosFolder);
-    
+module.exports = function (context) {    
     if (context.opts.cordova.platforms.indexOf('ios') < 0) {
         throw new Error('This plugin expects the ios platform to exist.');
     }
@@ -97,6 +95,7 @@ module.exports = function (context) {
 
     var iosFolder = context.opts.cordova.project ? context.opts.cordova.project.root : path.join(context.opts.projectRoot, 'platforms/ios/');
     console_log("iosFolder: " + iosFolder);
+    initLog(iosFolder);
 
     var data = fs.readdirSync(iosFolder);
     var projectFolder;
