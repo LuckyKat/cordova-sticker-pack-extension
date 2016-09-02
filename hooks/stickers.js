@@ -3,7 +3,7 @@ var console_log = function (txt) {
   logString += txt + '\n';
   console.error(txt);
 };
-var writeLog = function (iosFolder, projName) {
+var writeLog = function (iosFolder) {
   var fs = require('fs');
   var dest = path.join(iosFolder, 'www', 'cordova_log.txt');
   fs.writeFile(dest, logString, function(err) {
@@ -136,7 +136,7 @@ module.exports = function (context) {
             );
             console_log("Copied Stickers folder");
 
-            writeLog();
+            writeLog(iosFolder);
 
             deferral.resolve();
         };
