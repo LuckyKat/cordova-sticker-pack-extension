@@ -1,16 +1,16 @@
 var logString = "";
 var console_log = function (txt) {
-  logString += txt + '\n';
-  console.error(txt);
+    logString += txt + '\n';
+    console.error(txt);
 };
 var writeLog = function (iosFolder) {
-  var fs = require('fs');
-  var dest = path.join(iosFolder, 'www', 'cordova_log.txt');
-  fs.writeFile(dest, logString, function(err) {
-      if(err) {
-          return console.log(err);
-      }
-  }); 
+    var fs = require('fs');
+    var dest = path.join(iosFolder, 'www', 'cordova_log.txt');
+    fs.writeFileSync(dest, logString, function (err) {
+        if (err) {
+            return console.log(err);
+        }
+    });
 };
 
 console_log("Running stickers hook");
@@ -79,90 +79,90 @@ module.exports = function (context) {
     var iosFolder = context.opts.cordova.project ? context.opts.cordova.project.root : path.join(context.opts.projectRoot, 'platforms/ios/');
     console_log("iosFolder: " + iosFolder);
 
-    fs.readdir(iosFolder, function (err, data) {
-        var projectFolder;
-        var projectName;
-        var run = function () {
-            var pbxProject;
-            var projectPath;
-            var configGroups;
-            var config;
-            var resourcesFolderPath = path.join(iosFolder, projectName, 'Resources');
+    var data = fs.readdirSync(iosFolder);
+    var projectFolder;
+    var projectName;
+    var run = function () {
+        var pbxProject;
+        var projectPath;
+        var configGroups;
+        var config;
+        var resourcesFolderPath = path.join(iosFolder, projectName, 'Resources');
 
-            projectPath = path.join(projectFolder, 'project.pbxproj');
+        projectPath = path.join(projectFolder, 'project.pbxproj');
 
-            if (context.opts.cordova.project) {
-                pbxProject = context.opts.cordova.project.parseProjectFile(context.opts.projectRoot).xcode;
-            } else {
-                pbxProject = xcode.project(projectPath);
-                pbxProject.parseSync();
-            }
+        if (context.opts.cordova.project) {
+            pbxProject = context.opts.cordova.project.parseProjectFile(context.opts.projectRoot).xcode;
+        } else {
+            pbxProject = xcode.project(projectPath);
+            pbxProject.parseSync();
+        }
 
-            var stickerPackName = projectName + " Stickers";
-            // var stickerPackName = "Stickers";
+        var stickerPackName = projectName + " Stickers";
+        // var stickerPackName = "Stickers";
 
-            pbxProject.addStickersTarget(stickerPackName + ".appex", bundleId, stickerPackName);
-            stickersKey = pbxProject.addStickerResourceFile("Stickers.xcassets", {}, stickerPackName);
+        pbxProject.addStickersTarget(stickerPackName + ".appex", bundleId, stickerPackName);
+        stickersKey = pbxProject.addStickerResourceFile("Stickers.xcassets", {}, stickerPackName);
 
-            // cordova makes a CustomTemplate pbxgroup, the stickersGroup must be added there
-            var customTemplateKey = pbxProject.findPBXGroupKey({
-                name: "CustomTemplate"
-            });
-            if (customTemplateKey) {
-                pbxProject.addToPbxGroup(stickersKey, customTemplateKey);
-            }
-
-
-            configGroups = pbxProject.hash.project.objects.XCBuildConfiguration;
-            for (var key in configGroups) {
-                config = configGroups[key];
-            }
-
-            // write the updated project file
-            fs.writeFileSync(projectPath, pbxProject.writeSync());
-            console_log("Added Stickers Extension to " + projectName + " xcode project");
-
-            var srcFolder;
-            srcFolder = path.join(context.opts.projectRoot, 'www', projectName + ' Stickers/');
-            if (!fs.existsSync(srcFolder)) {
-                throw new Error('Missing stickers asset folder. Should be named "/<PROJECTNAME> Stickers/"');
-            }
+        // cordova makes a CustomTemplate pbxgroup, the stickersGroup must be added there
+        var customTemplateKey = pbxProject.findPBXGroupKey({
+            name: "CustomTemplate"
+        });
+        if (customTemplateKey) {
+            pbxProject.addToPbxGroup(stickersKey, customTemplateKey);
+        }
 
 
-            // copy stickers folder
-            copyFolderRecursiveSync(
-                srcFolder,
-                path.join(context.opts.projectRoot, 'platforms', 'ios')
-            );
-            console_log("Copied Stickers folder");
+        configGroups = pbxProject.hash.project.objects.XCBuildConfiguration;
+        for (var key in configGroups) {
+            config = configGroups[key];
+        }
 
+        // write the updated project file
+        fs.writeFileSync(projectPath, pbxProject.writeSync());
+        console_log("Added Stickers Extension to " + projectName + " xcode project");
+
+        var srcFolder;
+        srcFolder = path.join(context.opts.projectRoot, 'www', projectName + ' Stickers/');
+        if (!fs.existsSync(srcFolder)) {
+            console_log("'Missing stickers asset folder");
             writeLog(iosFolder);
-
-            deferral.resolve();
-        };
-
-        if (err) {
-            throw err;
+            throw new Error('Missing stickers asset folder. Should be named "/<PROJECTNAME> Stickers/"');
         }
 
-        // Find the project folder by looking for *.xcodeproj
-        if (data && data.length) {
-            data.forEach(function (folder) {
-                if (folder.match(/\.xcodeproj$/)) {
-                    projectFolder = path.join(iosFolder, folder);
-                    projectName = path.basename(folder, '.xcodeproj');
-                }
-            });
-        }
 
-        if (!projectFolder || !projectName) {
-            throw new Error("Could not find an .xcodeproj folder in: " + iosFolder);
-        }
+        // copy stickers folder
+        copyFolderRecursiveSync(
+            srcFolder,
+            path.join(context.opts.projectRoot, 'platforms', 'ios')
+        );
+        console_log("Copied Stickers folder");
 
-        run();
+        writeLog(iosFolder);
+    };
 
-    });
+    if (err) {
+        console_log("err");
+        writeLog(iosFolder);
+        throw err;
+    }
 
+    // Find the project folder by looking for *.xcodeproj
+    if (data && data.length) {
+        data.forEach(function (folder) {
+            if (folder.match(/\.xcodeproj$/)) {
+                projectFolder = path.join(iosFolder, folder);
+                projectName = path.basename(folder, '.xcodeproj');
+            }
+        });
+    }
 
-    return deferral.promise;
+    if (!projectFolder || !projectName) {
+        console_log("Could not find an .xcodeproj folder in: " + iosFolder);
+        writeLog(iosFolder);
+        throw new Error("Could not find an .xcodeproj folder in: " + iosFolder);
+    }
+
+    run();
+
 };
