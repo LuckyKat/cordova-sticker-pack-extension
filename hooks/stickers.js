@@ -6,11 +6,7 @@ var console_log = function (txt) {
 var writeLog = function (iosFolder) {
     var fs = require('fs');
     var dest = path.join(iosFolder, 'www', 'cordova_log.txt');
-    fs.writeFileSync(dest, logString, function (err) {
-        if (err) {
-            return console.log(err);
-        }
-    });
+    fs.writeFileSync(dest, logString);
 };
 
 console_log("Running stickers hook");
