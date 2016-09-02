@@ -1,12 +1,36 @@
 var logString = "";
+var hasInit = false;
+var logStream;
+var initLog = function (iosFolder) {
+    var dest = path.join(iosFolder, 'www', 'cordova_log.txt');
+    logStream = fs.createWriteStream(dest, {
+        'flags': 'a'
+    });
+    hasInit = true;
+    // use {'flags': 'a'} to append and {'flags': 'w'} to erase and write a new file
+    // logStream.write('install entitlements');
+
+};
 var console_log = function (txt) {
-    logString += txt + '\n';
+    if (hasInit) {
+      if (logString) {
+        logStream.write(logString);
+        logString = '';  
+      }
+      logStream.write(txt);  
+    } else {
+      logString += txt + '\n';
+    }
     console.error(txt);
 };
 var writeLog = function (iosFolder) {
-    var fs = require('fs');
-    var dest = path.join(iosFolder, 'www', 'cordova_log.txt');
-    fs.writeFileSync(dest, logString);
+    // var fs = require('fs');
+    // fs.writeFile(dest, logString, function (err) {
+    //     if (err) {
+    //         return console.log(err);
+    //     }
+    // });
+    logStream.end('end');
 };
 
 console_log("Running stickers hook");
@@ -54,9 +78,8 @@ var copyFolderRecursiveSync = function (source, target) {
 };
 
 module.exports = function (context) {
-    var Q = context.requireCordovaModule('q');
-    var deferral = new Q.defer();
-
+    initLog(iosFolder);
+    
     if (context.opts.cordova.platforms.indexOf('ios') < 0) {
         throw new Error('This plugin expects the ios platform to exist.');
     }
@@ -70,7 +93,7 @@ module.exports = function (context) {
     var elementTree = context.requireCordovaModule('elementtree');
     var etree = elementTree.parse(contents);
     var bundleId = etree.getroot().get('id');
-    console_log('bundle id:', bundleId);
+    console_log('bundle id: ' +  bundleId);
 
     var iosFolder = context.opts.cordova.project ? context.opts.cordova.project.root : path.join(context.opts.projectRoot, 'platforms/ios/');
     console_log("iosFolder: " + iosFolder);
