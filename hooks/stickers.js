@@ -136,6 +136,8 @@ module.exports = function (context) {
             );
             console_log("Copied Stickers folder");
 
+            writeLog();
+
             deferral.resolve();
         };
 
