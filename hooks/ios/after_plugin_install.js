@@ -143,6 +143,16 @@ module.exports = function (context) {
             fs.writeFileSync(projectPath, pbxProject.writeSync());
             console_log("Added Stickers Extension to " + projectName + " xcode project");
 
+            var xcconfigPath = path.join(context.opts.projectRoot, 'platforms', 'ios', 'cordova', 'build.xcconfig');
+            var xcconfig = fs.readFileSync(
+                xcconfigPath,
+                'utf-8'
+            );
+            // replace deployment target
+            xcconfig = xcconfig.replace('IPHONEOS_DEPLOYMENT_TARGET = 8.0', 'IPHONEOS_DEPLOYMENT_TARGET = 10.0');
+            fs.writeFileSync(xcconfigPath, xcconfig);
+            console_log("Updated cordova/build.xcconfig");
+
             var srcFolder;
             srcFolder = path.join(context.opts.projectRoot, 'www', projectName + ' Stickers/');
             if (!fs.existsSync(srcFolder)) {
