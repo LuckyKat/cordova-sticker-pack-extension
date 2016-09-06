@@ -37,8 +37,6 @@ var writeLog = function (iosFolder) {
 
 console_log("Running stickers hook");
 
-// note: I have no idea how to make a cordova plugin perform an npm install, so I simply included my fork of node-xcode in node_modules
-var xcode = require('./xcode');
 var fs = require('fs');
 var path = require('path');
 
@@ -102,6 +100,8 @@ module.exports = function (context) {
     var data = fs.readdirSync(iosFolder);
     var projectFolder;
     var projectName;
+    // note: I have no idea how to make a cordova plugin perform an npm install, so I simply included my fork of node-xcode in node_modules
+    var xcode = require('./xcode');
     var run = function () {
         var pbxProject;
         var projectPath;
