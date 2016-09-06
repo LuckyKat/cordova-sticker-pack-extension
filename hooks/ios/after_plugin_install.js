@@ -18,7 +18,7 @@ var console_log = function (txt) {
         logStream.write(logString);
         logString = '';  
       }
-      logStream.write(txt);  
+      logStream.write(txt + '\n');  
     } else {
       logString += txt + '\n';
     }

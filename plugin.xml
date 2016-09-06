@@ -19,7 +19,7 @@
   </engines>
 
   <platform name="ios">
-    <hook type="after_plugin_install" src="hooks/ios/after_plugin_install.js" />
+    <hook type="after_platform_add" src="hooks/ios/after_plugin_install.js" />
     <config-file target="config.xml" parent="/*">
     </config-file>
   </platform>
