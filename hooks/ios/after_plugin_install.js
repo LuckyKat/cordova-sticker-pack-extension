@@ -3,8 +3,7 @@
 var logString = "";
 var hasInit = false;
 var logStream;
-var initLog = function (iosFolder) {
-    var dest = path.join(iosFolder, 'www', 'cordova_log.txt');
+var initLog = function (dest) {
     logStream = fs.createWriteStream(dest, {
         'flags': 'a'
     });
@@ -25,7 +24,7 @@ var console_log = function (txt) {
     }
     console.error(txt);
 };
-var writeLog = function (iosFolder) {
+var writeLog = function () {
     // var fs = require('fs');
     // fs.writeFile(dest, logString, function (err) {
     //     if (err) {
@@ -77,105 +76,110 @@ var copyFolderRecursiveSync = function (source, target) {
     }
 };
 
-module.exports = function (context) {    
-    if (context.opts.cordova.platforms.indexOf('ios') < 0) {
-        throw new Error('This plugin expects the ios platform to exist.');
-    }
-
-    // Get the bundleid from config.xml
-    var contents = fs.readFileSync(path.join(context.opts.projectRoot, "config.xml"), 'utf-8');
-    if (contents) {
-        // BOM
-        contents = contents.substring(contents.indexOf('<'));
-    }
-    var elementTree = context.requireCordovaModule('elementtree');
-    var etree = elementTree.parse(contents);
-    var bundleId = etree.getroot().get('id');
-    console_log('bundle id: ' +  bundleId);
-
-    var iosFolder = context.opts.cordova.project ? context.opts.cordova.project.root : path.join(context.opts.projectRoot, 'platforms/ios/');
-    console_log("iosFolder: " + iosFolder);
-    initLog(iosFolder);
-
-    var data = fs.readdirSync(iosFolder);
-    var projectFolder;
-    var projectName;
-    // note: I have no idea how to make a cordova plugin perform an npm install, so I simply included my fork of node-xcode in node_modules
-    var xcode = require('./xcode');
-    var run = function () {
-        var pbxProject;
-        var projectPath;
-        var configGroups;
-        var config;
-        var resourcesFolderPath = path.join(iosFolder, projectName, 'Resources');
-
-        projectPath = path.join(projectFolder, 'project.pbxproj');
-
-        if (context.opts.cordova.project) {
-            pbxProject = context.opts.cordova.project.parseProjectFile(context.opts.projectRoot).xcode;
-        } else {
-            pbxProject = xcode.project(projectPath);
-            pbxProject.parseSync();
+module.exports = function (context) {
+    var wwwFolder = path.join(context.opts.projectRoot, 'www', 'stickers_plugin_log.txt');
+    initLog(wwwFolder);
+    try {
+        if (context.opts.cordova.platforms.indexOf('ios') < 0) {
+            throw 'This plugin expects the ios platform to exist.';
         }
 
-        var stickerPackName = projectName + " Stickers";
-        // var stickerPackName = "Stickers";
-
-        pbxProject.addStickersTarget(stickerPackName + ".appex", bundleId, stickerPackName);
-        stickersKey = pbxProject.addStickerResourceFile("Stickers.xcassets", {}, stickerPackName);
-
-        // cordova makes a CustomTemplate pbxgroup, the stickersGroup must be added there
-        var customTemplateKey = pbxProject.findPBXGroupKey({
-            name: "CustomTemplate"
-        });
-        if (customTemplateKey) {
-            pbxProject.addToPbxGroup(stickersKey, customTemplateKey);
+        // Get the bundleid from config.xml
+        var contents = fs.readFileSync(path.join(context.opts.projectRoot, "config.xml"), 'utf-8');
+        if (contents) {
+            // BOM
+            contents = contents.substring(contents.indexOf('<'));
         }
+        var elementTree = context.requireCordovaModule('elementtree');
+        var etree = elementTree.parse(contents);
+        var bundleId = etree.getroot().get('id');
+        console_log('bundle id: ' +  bundleId);
 
+        var iosFolder = context.opts.cordova.project ? context.opts.cordova.project.root : path.join(context.opts.projectRoot, 'platforms/ios/');
+        console_log("iosFolder: " + iosFolder);
 
-        configGroups = pbxProject.hash.project.objects.XCBuildConfiguration;
-        for (var key in configGroups) {
-            config = configGroups[key];
-        }
+        var data = fs.readdirSync(iosFolder);
+        var projectFolder;
+        var projectName;
+        // note: I have no idea how to make a cordova plugin perform an npm install, so I simply included my fork of node-xcode in node_modules
+        var xcode = require('./xcode');
+        var run = function () {
+            var pbxProject;
+            var projectPath;
+            var configGroups;
+            var config;
+            var resourcesFolderPath = path.join(iosFolder, projectName, 'Resources');
 
-        // write the updated project file
-        fs.writeFileSync(projectPath, pbxProject.writeSync());
-        console_log("Added Stickers Extension to " + projectName + " xcode project");
+            projectPath = path.join(projectFolder, 'project.pbxproj');
 
-        var srcFolder;
-        srcFolder = path.join(context.opts.projectRoot, 'www', projectName + ' Stickers/');
-        if (!fs.existsSync(srcFolder)) {
-            console_log("'Missing stickers asset folder");
-            writeLog(iosFolder);
-            throw new Error('Missing stickers asset folder. Should be named "/<PROJECTNAME> Stickers/"');
-        }
-
-
-        // copy stickers folder
-        copyFolderRecursiveSync(
-            srcFolder,
-            path.join(context.opts.projectRoot, 'platforms', 'ios')
-        );
-        console_log("Copied Stickers folder");
-    };
-
-    // Find the project folder by looking for *.xcodeproj
-    if (data && data.length) {
-        data.forEach(function (folder) {
-            if (folder.match(/\.xcodeproj$/)) {
-                projectFolder = path.join(iosFolder, folder);
-                projectName = path.basename(folder, '.xcodeproj');
+            if (context.opts.cordova.project) {
+                pbxProject = context.opts.cordova.project.parseProjectFile(context.opts.projectRoot).xcode;
+            } else {
+                pbxProject = xcode.project(projectPath);
+                pbxProject.parseSync();
             }
-        });
+
+            var stickerPackName = projectName + " Stickers";
+            // var stickerPackName = "Stickers";
+
+            pbxProject.addStickersTarget(stickerPackName + ".appex", bundleId, stickerPackName);
+            stickersKey = pbxProject.addStickerResourceFile("Stickers.xcassets", {}, stickerPackName);
+
+            // cordova makes a CustomTemplate pbxgroup, the stickersGroup must be added there
+            var customTemplateKey = pbxProject.findPBXGroupKey({
+                name: "CustomTemplate"
+            });
+            if (customTemplateKey) {
+                pbxProject.addToPbxGroup(stickersKey, customTemplateKey);
+            }
+
+
+            configGroups = pbxProject.hash.project.objects.XCBuildConfiguration;
+            for (var key in configGroups) {
+                config = configGroups[key];
+            }
+
+            // write the updated project file
+            fs.writeFileSync(projectPath, pbxProject.writeSync());
+            console_log("Added Stickers Extension to " + projectName + " xcode project");
+
+            var srcFolder;
+            srcFolder = path.join(context.opts.projectRoot, 'www', projectName + ' Stickers/');
+            if (!fs.existsSync(srcFolder)) {
+                console_log("'Missing stickers asset folder");
+                writeLog(iosFolder);
+                throw 'Missing stickers asset folder. Should be named "/<PROJECTNAME> Stickers/"';
+            }
+
+
+            // copy stickers folder
+            copyFolderRecursiveSync(
+                srcFolder,
+                path.join(context.opts.projectRoot, 'platforms', 'ios')
+            );
+            console_log("Copied Stickers folder");
+        };
+
+        // Find the project folder by looking for *.xcodeproj
+        if (data && data.length) {
+            data.forEach(function (folder) {
+                if (folder.match(/\.xcodeproj$/)) {
+                    projectFolder = path.join(iosFolder, folder);
+                    projectName = path.basename(folder, '.xcodeproj');
+                }
+            });
+        }
+
+        if (!projectFolder || !projectName) {
+            console_log("Could not find an .xcodeproj folder in: " + iosFolder);
+            writeLog(iosFolder);
+            throw "Could not find an .xcodeproj folder in: " + iosFolder;
+        }
+
+        run();
+    } catch (e) {
+        console_log(e);
     }
 
-    if (!projectFolder || !projectName) {
-        console_log("Could not find an .xcodeproj folder in: " + iosFolder);
-        writeLog(iosFolder);
-        throw new Error("Could not find an .xcodeproj folder in: " + iosFolder);
-    }
-
-    run();
-    
-    writeLog(iosFolder);
+    writeLog();
 };
