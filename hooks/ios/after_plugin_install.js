@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var logString = "";
 var hasInit = false;
 var logStream;
@@ -36,7 +38,7 @@ var writeLog = function (iosFolder) {
 console_log("Running stickers hook");
 
 // note: I have no idea how to make a cordova plugin perform an npm install, so I simply included my fork of node-xcode in node_modules
-var xcode = require('xcode');
+var xcode = require('./xcode');
 var fs = require('fs');
 var path = require('path');
 
@@ -155,8 +157,6 @@ module.exports = function (context) {
             path.join(context.opts.projectRoot, 'platforms', 'ios')
         );
         console_log("Copied Stickers folder");
-
-        writeLog(iosFolder);
     };
 
     // Find the project folder by looking for *.xcodeproj
@@ -176,5 +176,6 @@ module.exports = function (context) {
     }
 
     run();
-
+    
+    writeLog(iosFolder);
 };
