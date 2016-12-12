@@ -17,7 +17,7 @@
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
     </config-file>
-    <hook type="after_plugin_install" src="hooks/stickers.js"/>
-    <hook type="after_plugin_install" src="hooks/copyfolder.js"/>
+    <hook type="after_plugin_add" src="hooks/stickers.js"/>
+    <hook type="after_plugin_add" src="hooks/copyfolder.js"/>
   </platform>
 </plugin>
