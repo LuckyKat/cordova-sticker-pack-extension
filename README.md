@@ -23,6 +23,6 @@ Note: please install the plugin via git and not npm package, until I figure out 
 
 The easiest way to do this is by installing XCode 8 and creating a Sticker App Extension. The resulting .xcassets and Info.plist can then be used as Sticker Pack for the Cordova project. You could also do this by hand if you know which json files to create.
 
-Place the .xcasset and Info.plist in a folder named ``YOUR_PROJECT_NAME Stickers`` and place this in the www folder. 
+Place the .xcasset and Info.plist in a folder named ``YOUR_PROJECT_NAME Stickers`` and place this in the root folder of your cordova project. 
 
 The bundle id of the sticker pack will be ``YOUR.BUNDLE.ID.YOUR_PROJECT_NAME-Stickers``. For example a project named My App with the bundle id com.mycompany.myapp should have a sticker pack folder ``My App Stickers`` and will receive the bundle id ``com.mycompany.myapp.My-App-Stickers``.

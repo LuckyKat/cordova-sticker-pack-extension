@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
         id="cordova-sticker-pack-extension"
-        version="1.0.0">
+        version="1.0.1">
 
   <name>iMessage Sticker Pack Extension</name>
   <author>Hernan Zhou</author>

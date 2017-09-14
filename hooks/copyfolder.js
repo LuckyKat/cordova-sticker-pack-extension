@@ -60,9 +60,9 @@ module.exports = function (context) {
         if (!projectFolder || !projectName) {
             throw new Error("Could not find an .xcodeproj folder in: " + iosFolder);
         }
-        srcFolder = path.join(context.opts.projectRoot, 'www', projectName + ' Stickers/');
+        srcFolder = path.join(context.opts.projectRoot, projectName + ' Stickers/');
         if (!fs.existsSync(srcFolder)) {
-            throw new Error('Missing stickers asset folder. Should be named "/<PROJECTNAME> Stickers/"');
+            throw new Error('Missing stickers asset folder. Should be named "/<PROJECTNAME> Stickers/ and place it in the root folder of your cordova project"');
         }
 
 

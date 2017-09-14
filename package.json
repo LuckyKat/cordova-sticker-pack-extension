@@ -1,6 +1,6 @@
 {
   "name": "cordova-sticker-pack-extension",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Adds a Sticker Pack Extension to your Cordova project",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
